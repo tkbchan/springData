@@ -8,6 +8,7 @@ import ph.globe.com.edo.springData.entity.Student;
 import ph.globe.com.edo.springData.repository.StudentRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/create-student")
@@ -35,6 +36,18 @@ public class StudentController {
         Student student = converter.dtoToEntity(dto);
         student=  studentRepository.save(student);
         return converter.entityToDto(student);
+    }
+
+    @PutMapping("/update/{studNo}")
+    public StudentDto update(@PathVariable(value = "studNo") Long studNo, @RequestBody Student student) {
+        Optional<Student> studentData = studentRepository.findById(studNo);
+        Student stud = studentData.get();
+        stud.setFullName(student.getFullName());
+        stud.setUsername(student.getUsername());
+        stud.setPassword(student.getPassword());
+        stud.setProgram(student.getProgram());
+        stud.setAddress(student.getAddress());
+        return converter.entityToDto(studentRepository.save(stud));
     }
 
     @DeleteMapping("/delete/{studNo}")
